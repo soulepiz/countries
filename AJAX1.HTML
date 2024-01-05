@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COUNTRY</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <nav class="navbar bg-primary">
+        <div class="container-fluid">Countries</div>
+      </nav>
+    <div class="vh-100 bg-success">
+        <div class="row w-100 m-0 d-flex justify-content-center pt-5">
+            <div class="w-25">
+                <input type="text" id="input">
+                <button onclick="search()" class="rounded mx-3">CLICK here</i></button>
+            </div>
+        </div>
+        <div class="row w-100 d-flex justify-content-center mt-5">
+            <div class="w-25" id="flagdiv"></div>
+            <div id="result" class="w-50 d-flex align-items-center rounded"></div>
+        </div>
+    </div>
+</body>
+
+<script>
+
+var result = document.getElementById('result')
+var flagdiv = document.getElementById('flagdiv')
+
+function search()
+{
+
+var scountry = input.value;
+
+const a = new XMLHttpRequest();
+
+a.open("get",`https://restcountries.com/v3.1/name/${scountry}?fullText=true`);
+
+a.send();
+
+a.onreadystatechange = () =>
+{
+    if(a.readyState==4)
+    {
+        if(a.status<=200 && a.status<300)
+        {
+            let cdetails = JSON.parse(a.responseText);
+            console.log(cdetails);
+            var country_name = cdetails[0].name.common
+            var capital = cdetails[0].capital[0]
+            var continent = cdetails[0].continents[0];
+            var flag = cdetails[0].flags.png;
+            var timezone = cdetails[0].timezones[0]
+            var population = cdetails[0].population
+            var map = cdetails[0].maps.googleMaps;
+            console.log(map);
+
+
+            result.innerHTML = `
+                <table>
+                    <tr>
+                        <th>Country</th>
+                        <td>: ${country_name}</td>
+                    </tr>
+                    <tr>
+                        <th>Capital</th>
+                        <td>: ${capital}</td>
+                    </tr>
+                    <tr>
+                        <th>Continent</th>
+                        <td>: ${continent}</td>
+                    </tr>
+                    <tr>
+                        <th>Timezone</th>
+                        <td>: ${timezone}</td>
+                    </tr>
+                    <tr>
+                        <th>Population</th>
+                        <td>: ${population}</td>
+                    </tr>
+                    <tr>
+                        <th>Map</th>
+                        <td><a href='${map}'>: ${map}</a></td>
+                    </tr>
+                    
+                </table>
+                `
+                flagdiv.innerHTML = `
+                <img src="${flag}" width="100%">
+                `
+            
+        }
+        else
+        {
+            alert("error");
+        }
+    }
+}
+}
+
+</script>
+
+</html>
